@@ -183,27 +183,28 @@ int main(int argc, char *argv[])
 
 	// we read data in an endless loop and display it
 	// this needs to run in a thread ideally
-	while (1) {
+	int comReg, clkReg, setReg;
+	// tell the AD7705 to read the communication register (8 bits)
+	writeReg(fd,0x08);
+	// read the data register by performing two 8 bit reads
+	comReg = (int) readReg(fd);
+	printf("communication register: %d/n",comReg);
+	// tell the AD7705 to read the clock register (8 bits)
+	writeReg(fd,0x28);
+	// read the data register by performing two 8 bit reads
+	clkReg = (int) readReg(fd);
+	printf("clock register: %d/n",comReg);
+	// tell the AD7705 to read the setup register (8 bits)
+	writeReg(fd,0x18);
+	// read the data register by performing two 8 bit reads
+	setReg = (int) readReg(fd);
+	printf("se-tup register: %d/n",comReg);
+	// tell the AD7705 to read the clock register (8 bits)
+	
+	
+	
+	  
 
-	  // let's wait for data for max one second
-	  ret = gpio_poll(sysfs_fd,1000);
-	  if (ret<1) {
-	    fprintf(stderr,"Poll error %d\n",ret);
-	  }
-
-	  // tell the AD7705 to read the data register (16 bits)
-	  writeReg(fd,0x38);
-	  // read the data register by performing two 8 bit reads
-	  int value = readData(fd)-0x8000;
-		fprintf(stderr,"data = %d       \r",value);
-
-		// if stdout is redirected to a file or pipe, output the data
-		if( no_tty )
-		{
-			printf("%d\n", value);
-			fflush(stdout);
-		}
-	}
 
 	close(fd);
 	gpio_fd_close(sysfs_fd);
